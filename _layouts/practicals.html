@@ -25,7 +25,8 @@ layout: page
         <div class="projects__grid">
             {% assign current_date = "now" | date: "%Y-%m-%d" %}
             {% for item in site.practicals %}
-              {% if item.published <= current_date %}
+              {% assign published = item.published | date: "%Y-%m-%d" %}
+              {% if published <= current_date %}
                 <a href="{{ item.url | relative_url }}" class="projects__item">
                     <div class="projects__item-image">
                         <img src="{% if item.featured_image %}{{ item.featured_image | relative_url }}{% else %}{{ site.featured_image | relative_url }}{%endif%}" alt="Image of {{item.title}}">
