@@ -153,6 +153,36 @@ layout: page
       {% endfor %}
       {% endfor %}
     </div>
+    {% if page.alumni != nil %}
+    {% assign people_size = page.alumni | size %}
+    {% if people_size != 0 %}
+    <div class="section-heading">
+      <h2>Project Alumni</h2>
+      <span></span>
+    </div>
+    <div class="team__grid">
+      {% for person_slug in page.alumni %}
+      {% for person in site.people %}
+      {% if person.slug == person_slug %}
+      {% include extractname.html entry=person %}
+      <a href="{{ person.url }}" class="team__member">
+        <div class="team__member-image">
+          <img src="{{site.data.images.directory | relative_url }}/{%if person.image and person.image != "" %}{{person.image}}{% else %}{{site.data.images.person_placeholder}}{%endif%}" alt="Image of {{name}}">
+        </div>
+        <div class="team__member-details">
+          <div>
+            <h2>{{ name }}</h2>
+	    <p>{{ person.position }}{% if person.institution %}, {{ person.institution }}{%endif%}</p>
+          </div>
+          <span>View Profile</span>
+        </div>
+      </a>
+      {% endif %}
+      {% endfor %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
   </div>
 </section>
 {% endif %}
