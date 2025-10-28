@@ -29,8 +29,8 @@ layout: page
                       <img
                         src="{% if item.featured_image %}{{ item.featured_image | relative_url }}{% else %}{{ site.featured_image | relative_url }}{% endif %}"
                         alt="Image of {{ item.title }}"
-                        onerror="this.onerror=null; this.src='/assets/images/fallback/1.svg';"
-                     >
+                        onerror="this.onerror=null; this.src=createGeneratedSVG({{ item.week | default: 2 }});"
+                      >
                     </div>
                     <div class="projects__item-details">
                         <div>
@@ -44,3 +44,66 @@ layout: page
         </div>
     </div>
 </section>
+
+<script>
+function createGeneratedSVG(week) {
+  const svgText = generateSVG(week);
+  const blob = new Blob([svgText], { type: 'image/svg+xml' });
+  return URL.createObjectURL(blob);
+}
+</script>
+
+<script>
+function generateSVG(week = 2) {
+  const p = week / 10;
+  const xs = [0,14,28,42,56,70,84,98,112,126,140,154,168];
+  const ys = [-14,0,14,28,42,56,70,84,98,112];
+  const dots = {};
+  xs.forEach(x => ys.forEach(y => {
+    dots[`${x},${y}`] = Math.random() < p ? 1 : 0.2;
+  }));
+
+  let svg = [];
+  svg.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 144">');
+  svg.push('  <rect width="216" height="144" fill="#0B1926"/>');
+  svg.push('  <g fill="#fff" transform="translate(22,21)">');
+  xs.forEach(x => {
+    svg.push(`    <g transform="translate(${x},0)">`);
+    ys.forEach(y => {
+      const op = dots[`${x},${y}`];
+      svg.push(`      <rect opacity="${op}" x="0" y="${y}" width="4" height="4"/>`);
+    });
+    svg.push('    </g>');
+  });
+  svg.push('    <g stroke="#ffffff" stroke-linecap="square" stroke-width="1">');
+  xs.forEach(x => {
+    ys.forEach(y => {
+      if (dots[`${x},${y}`] === 1) {
+        [[14,0],[0,14],[14,14],[-14,14]].forEach(([dx,dy]) => {
+          const x2 = x + dx, y2 = y + dy;
+          if (xs.includes(x2) && ys.includes(y2) && dots[`${x2},${y2}`] === 1 && Math.random() > 0.25 + p / 2) {
+            svg.push(`      <line opacity="0.2" x1="${x+2}" y1="${y+2}" x2="${x2+2}" y2="${y2+2}"/>`);
+          }
+        });
+      }
+    });
+  });
+  svg.push('    </g>');
+  svg.push('  </g>');
+  svg.push('</svg>');
+  return svg.join('\n');
+}
+
+function replaceMissingThumbnails() {
+  document.querySelectorAll('.projects__item-image img').forEach(img => {
+    img.addEventListener('error', () => {
+      const week = parseInt(img.closest('.projects__item').querySelector('h2')?.textContent.match(/\d+/)?.[0] || 2);
+      const svgText = generateSVG(week);
+      const blob = new Blob([svgText], { type: 'image/svg+xml' });
+      img.src = URL.createObjectURL(blob);
+    }, { once: true });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', replaceMissingThumbnails);
+</script>
