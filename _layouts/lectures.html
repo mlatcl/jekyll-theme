@@ -29,8 +29,8 @@ layout: page
                       <img
                         src="{% if item.featured_image %}{{ item.featured_image | relative_url }}{% else %}{{ site.featured_image | relative_url }}{% endif %}"
                         alt="Image of {{ item.title }}"
-                        onerror="this.onerror=null; this.src='{{ '/assets/images/fallback/1.svg' | relative_url }}';"
-                      >
+                        onerror="this.onerror=null; this.src='/assets/images/fallback/1.svg';"
+                     >
                     </div>
                     <div class="projects__item-details">
                         <div>
