@@ -18,7 +18,8 @@
   margin: auto;
   display: block;
   width: 90%;
-  max-width: min(95vw, 1200px);
+  /* CSS min() — unquoted so LibSass (github-pages) does not evaluate px vs vw */
+  max-width: unquote("min(95vw, 1200px)");
   /*max-width: 700px;*/
 }
 
@@ -130,7 +131,7 @@
   margin: 1em auto;
   position: relative;
   z-index: 1001;
-  max-width: min(95vw, $content-width);
+  max-width: unquote("min(95vw, #{$content-width})");
   background-color: #EBEDEF;
 }
 .figure-frame {
