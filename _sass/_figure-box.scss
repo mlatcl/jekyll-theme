@@ -2,8 +2,8 @@
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 200px; /* Location of the box */
+  z-index: 1000; /* Above site navigation */
+  padding: 4rem 1rem 2rem; /* Room for close control; scrollable content below */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -50,20 +50,33 @@
   to {transform:scale(1)}
 }
 
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
+/* The Close Button — fixed above modal content (modal-figure paints over absolute siblings) */
+.modal .close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1002;
+  margin: 0;
+  padding: 0.35em 0.65em;
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid #f1f1f1;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.65);
   color: #f1f1f1;
-  font-size: 40px;
+  font-size: 2rem;
   font-weight: bold;
+  line-height: 1;
+  text-align: center;
   transition: 0.3s;
+  cursor: pointer;
 }
 
-.close:hover,
-.close:focus {
-  color: #bbb;
+.modal .close:hover,
+.modal .close:focus {
+  color: #fff;
+  border-color: #fff;
+  background-color: rgba(0, 0, 0, 0.85);
   text-decoration: none;
   cursor: pointer;
 }
@@ -72,6 +85,14 @@
 .magnify {
   color: #f1f1f1;
   text-align: right;
+}
+
+.magnify .img-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
 }
 
 .img-button:hover,
@@ -88,16 +109,27 @@
   }
 }      
 .figure {
-  float: right;
-  border: 1px;
-  margin: 17px;
+  clear: both;
+  float: none;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1.5em auto;
   position: relative;
   background-color: #EBEDEF;
-  border-color: black;
+  border: 1px solid black;
 }
+
+/* Figures used to float right; code blocks must not wrap beside them */
+.sourceCode {
+  clear: both;
+}
+
 .modal-figure {
-  margin: 1em;
+  margin: 1em auto;
   position: relative;
+  z-index: 1001;
+  max-width: min(95vw, $content-width);
   background-color: #EBEDEF;
 }
 .figure-frame {
