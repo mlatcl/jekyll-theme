@@ -1,0 +1,36 @@
+
+<div class='full'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <h3>Advisory Group</h3>
+      <div class='spacing'></div>
+    </div>
+  </div>
+  <div class='row'>
+    {% assign count = 0 %}
+    {% for person_slug in site.data.teams.advisory_group %}
+    {% for person in site.people %}
+    {% if person.slug == person_slug %}
+      {% include extractname.html entry=person %}
+      {% assign count = count | plus: 1 %}
+      {% if count > 4 %}<!-- add in row here --> 
+      {% assign count = 1 %}
+  </div>
+  <div class='row'>
+      {% endif %}
+    <div class='small-6 medium-3 large-3 columns'>
+        <div class='mod modTeamMember style-2'>
+          <div class='member'>
+            <img class="avatar" alt="" src="{{site.data.images.directory | relative_url}}/{{person.image}}" />
+          </div>
+          <h3>{{name}}</h3>{% if person.position %}
+          <p class='position'>{{person.position}}{% if person.department %}
+          <br>{{person.department}}{%endif%}</p>{%endif%}
+          <!--<p>{{person.desc}}</p>-->
+          <div class='two spacing'></div>
+        </div>
+      </div>
+    {% endif %}{% endfor %}{% endfor %}
+  </div>
+  <div class='three spacing'></div>
+</div>

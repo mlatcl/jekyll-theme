@@ -1,0 +1,54 @@
+<div class='full'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <h3>Our team</h3>
+      <div class='spacing'></div>
+    </div>
+  </div>
+  <div class='row'>
+    {% assign count = 0 %}
+    {% for person_slug in site.data.teams.members %}
+    {% for person in site.people %}
+    {% if person.slug == person_slug %}
+      {% include extractname.html entry=person %}
+      {% assign count = count | plus: 1 %}
+      {% if count > 4 %}<!-- add in row here --> 
+      {% assign count = 1 %}
+  </div>
+  <div class='row'>
+      {% endif %}
+     <div class='small-6 medium-3 large-3 columns'>
+        <div class='mod modTeamMember style-2'>
+          <div class='member'>
+            <img class="avatar" alt="" src="{{ site.data.images.directory | relative_url }}/{%if person.image and person.image != "" %}{{person.image}}{% else %}APSci_place-holder.jpg{%endif%}" />
+            <div class='overlay'>
+              <ul class='socials'>
+                {% if person.website %}
+		<li><a target='_blank' href='{{person.website}}'><i class='fa fa-globe'></i></a></li>
+		{% endif %}
+                {% if person.github %}
+		<li><a target='_blank' href='https://github.com/{{person.github}}'><i class='fa fa-github'></i></a></li>
+		{% endif %}
+                {% if person.orcid %}
+		<li><a target='_blank' href='https://orcid.org/{{person.orcid}}'><i class='fa-brands fa-orcid'></i></a></li>
+		{% endif %}
+                {% if person.linkedin %}
+		<li><a target='_blank' href='https://linkedin.com/{{person.linedin}}'><i class='fa fa-linkedin'></i></a></li>
+		{% endif %}
+                {% if person.twitter %}
+		<li><a target='_blank' href='https://twitter.com/{{person.twitter}}'><i class='fa fa-twitter'></i></a></li>
+		{% endif %}		
+              </ul>
+            </div>
+          </div>
+          <h3>{{name}}</h3>{% if person.position %}
+          <p class='position'>{{person.position}}{% if person.department %}
+          <br>{{person.department}}{%endif%}</p>{%endif%}{%if person.biography%}
+          <p>{{person.biography}}</p>{%endif%}
+          <div class='two spacing'></div>
+        </div>
+      </div>
+   {% endif %}{% endfor %}{% endfor %}
+  </div>
+  <div class='three spacing'></div>
+</div>

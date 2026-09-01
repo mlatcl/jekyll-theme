@@ -1,0 +1,67 @@
+<div class='advanced mod modDefaultSlider'>
+  <div class='sequence' data-autostop='on' data-timeout='0'>
+    <a class='sequence-prev' href='javascript:void(0);'>
+      <span></span>
+    </a>
+    <a class='sequence-next' href='javascript:void(0);'>
+      <span></span>
+    </a>
+    <ul class='sequence-pagination'>
+      {% for item in site.data.homepage.slides %}
+        {% if forloop.index == 1 %}
+          <li class='current'></li>
+        {% else %}
+          <li></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <ul class='sequence-canvas'>
+      {% for item in site.data.homepage.slides %}
+        {% if forloop.index == 1 %}
+          {% assign class = "static" %}
+        {% else %}
+          {% assign class = '' %}
+        {% endif %}
+
+        <li class='frame {{class}}'>
+          <div class='bg' style='background-image: url({{site.data.images.directory | relative_url }}/{{item.featured_image}});'></div>
+          {% if item.infos %}
+            {% for info in item.infos %}
+              <div class='info{{forloop.index}} {{info.animation}}'>
+                <div class='row'>
+                  <div class='medium-10 large-8 columns'>
+                    <p class='fa fa-check' style='color: #333;'>{{info.text}}</p>
+                    <div class='spacing'></div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class='title {{item.animation}}' style='color: rgb(255, 255, 255);'>
+              <div class='row'>
+                <div class='{{item.class}} columns'>
+		  <h2>{%-if item.invert-%}<span style='background-color:{{ item.color }}; padding-left:10px; padding-right:10px; color:white; text-transform:capitalize;'>
+		      {%-else-%}<span style='background-color:white; padding-left:10px; padding-right:10px; color:{{ item.color }}; text-transform:capitalize;'>
+			{%-endif-%}
+		      {{item.title}}</span><br/>{%-if item.invert-%}<span style='color:{{ item.color }};text-transform:lowercase;'>{%-else-%}
+			<span style='text-transform:lowercase;'>{%-endif-%}
+                  {{item.info}}</span></h2>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <div class='buttons-wrapper {{item.buttons.animation}}' style=''>
+            <div class='row'>
+              <div class='{{item.buttons.class}} columns'>
+                <!--<div class='two spacing'></div>-->
+                {% for item_a in item.buttons.items %}
+                  <a target="_blank" class='button {{item_a.class}}' href='{{item_a.link}}'>{{item_a.label}}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

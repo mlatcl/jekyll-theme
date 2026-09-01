@@ -1,0 +1,10 @@
+<div class='items centered-text'>
+  {% for item in site.data.latest_news.items  %}
+  <div class='item'>
+    <p class='author'>{{item.text}}</p>
+    <p class='quote'>{{item.title}}, {{item.date}}</p>
+    <a class="button small" href="{{item.link}}">{{item.link_text}}</a>
+    <div class='two spacing'></div>
+  </div>
+  {% endfor %}
+</div>
