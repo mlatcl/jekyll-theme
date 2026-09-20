@@ -1,0 +1,149 @@
+{% comment %}
+  Build related people and projects for a publication page.
+
+  People come from:
+  - author[].person_page
+  - author[].consortium.person_pages
+  - people who list this publication in their publications frontmatter
+
+  Projects come from:
+  - page.projects (if set on the publication)
+  - projects that list this publication in their publications frontmatter
+
+  Publication keys matched: page.slug, URL basename, and slug with YYYY-MM-DD- stripped.
+{% endcomment %}
+
+{% assign related_people_slugs = "" | split: "" %}
+{% assign related_project_slugs = "" | split: "" %}
+{% assign pub_keys = "" | split: "" %}
+
+{% assign pub_keys = pub_keys | push: page.slug %}
+{% assign url_slug = page.url | split: "/" | last | remove: ".html" %}
+{% unless pub_keys contains url_slug %}
+  {% assign pub_keys = pub_keys | push: url_slug %}
+{% endunless %}
+
+{% assign slug_parts = page.slug | split: "-" %}
+{% if slug_parts.size > 3 %}
+  {% assign maybe_year = slug_parts[0] %}
+  {% if maybe_year.size == 4 %}
+    {% assign undated_slug = slug_parts | slice: 3, 200 | join: "-" %}
+    {% unless pub_keys contains undated_slug %}
+      {% assign pub_keys = pub_keys | push: undated_slug %}
+    {% endunless %}
+  {% endif %}
+{% endif %}
+
+{% if page.author %}
+  {% for author in page.author %}
+    {% if author.person_page and author.person_page != "" %}
+      {% unless related_people_slugs contains author.person_page %}
+        {% assign related_people_slugs = related_people_slugs | push: author.person_page %}
+      {% endunless %}
+    {% endif %}
+    {% if author.consortium.person_pages %}
+      {% for person_slug in author.consortium.person_pages %}
+        {% unless related_people_slugs contains person_slug %}
+          {% assign related_people_slugs = related_people_slugs | push: person_slug %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if page.projects %}
+  {% for project_slug in page.projects %}
+    {% unless related_project_slugs contains project_slug %}
+      {% assign related_project_slugs = related_project_slugs | push: project_slug %}
+    {% endunless %}
+  {% endfor %}
+{% endif %}
+
+{% for person in site.people %}
+  {% if person.publications %}
+    {% for claimed in person.publications %}
+      {% if pub_keys contains claimed %}
+        {% unless related_people_slugs contains person.slug %}
+          {% assign related_people_slugs = related_people_slugs | push: person.slug %}
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+{% for project in site.projects %}
+  {% if project.publications %}
+    {% for claimed in project.publications %}
+      {% if pub_keys contains claimed %}
+        {% unless related_project_slugs contains project.slug %}
+          {% assign related_project_slugs = related_project_slugs | push: project.slug %}
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+{% assign people_count = related_people_slugs | size %}
+{% if people_count > 0 %}
+<section class="block block__team">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Related People</h2>
+      <span></span>
+    </div>
+    <div class="team__grid">
+      {% for person_slug in related_people_slugs %}
+        {% for person in site.people %}
+          {% if person.slug == person_slug %}
+            {% include extractname.html entry=person %}
+            <a href="{{ person.url }}" class="team__member">
+              <div class="team__member-image">
+                <img src="{{ site.data.images.directory | relative_url }}/{% if person.image and person.image != '' %}{{ person.image }}{% else %}{{ site.data.images.person_placeholder }}{% endif %}" alt="Image of {{ name }}">
+              </div>
+              <div class="team__member-details">
+                <div>
+                  <h2>{{ name }}</h2>
+                  <p>{{ person.position }}{% if person.institution %}, {{ person.institution }}{% endif %}</p>
+                </div>
+                <span>View Profile</span>
+              </div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% assign projects_count = related_project_slugs | size %}
+{% if projects_count > 0 %}
+<section class="block block__projects">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Related Projects</h2>
+      <span></span>
+    </div>
+    <div class="projects__grid">
+      {% for project_slug in related_project_slugs %}
+        {% for item in site.projects %}
+          {% if item.slug == project_slug %}
+            <a href="{{ item.url }}" class="projects__item">
+              <div class="projects__item-image">
+                <img src="{{ site.data.images.directory | relative_url }}/{{ item.featured_image }}" alt="Image of {{ item.title }}">
+              </div>
+              <div class="projects__item-details">
+                <div>
+                  <h2>{{ item.title }}</h2>
+                  <p>{{ item.excerpt }}</p>
+                </div>
+                <span>Read More</span>
+              </div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
