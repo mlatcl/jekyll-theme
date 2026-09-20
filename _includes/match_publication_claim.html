@@ -1,0 +1,19 @@
+{% comment %}
+  Sets matched_publication if include.claim matches include.publication.slug
+  either exactly or as the undated suffix of a YYYY-MM-DD-… slug.
+{% endcomment %}
+{% assign matched_publication = false %}
+{% if include.publication.slug == include.claim %}
+  {% assign matched_publication = true %}
+{% else %}
+  {% assign _slug_parts = include.publication.slug | split: "-" %}
+  {% if _slug_parts.size > 3 %}
+    {% assign _maybe_year = _slug_parts[0] %}
+    {% if _maybe_year.size == 4 %}
+      {% assign _undated_slug = _slug_parts | slice: 3, 200 | join: "-" %}
+      {% if _undated_slug == include.claim %}
+        {% assign matched_publication = true %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}

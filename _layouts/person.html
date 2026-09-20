@@ -108,7 +108,8 @@ layout: page
       {% for item in page.publications %}
       {% assign project_slug = item %}
       {% for item in site.publications %}
-      {% if item.slug == project_slug %}
+      {% include match_publication_claim.html claim=project_slug publication=item %}
+      {% if matched_publication %}
       {% include listpaper.html entry=item %}
       {% endif %}
       {% endfor %}
