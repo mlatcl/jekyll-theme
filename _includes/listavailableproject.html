@@ -1,6 +1,20 @@
 <div class="publications__item">
   <div class="publications__item-left column-t-9">
     <h2 class="publications__item-title">{{ project.title }}</h2>
+    {% if project.supervisors %}
+    <p><strong>Supervisor{% if project.supervisors.size > 1 %}s{% endif %}:</strong>
+      {% for person_slug in project.supervisors %}
+        {% assign person = site.people | where: "slug", person_slug | first %}
+        {% if person %}
+          {% include extractname.html entry=person %}
+          <a href="{{ person.url }}">{{ name | strip }}</a>{% unless forloop.last %}, {% endunless %}
+        {% endif %}
+      {% endfor %}
+    </p>
+    {% endif %}
+    {% if project.prerequisites %}
+    <p><strong>Prerequisite:</strong> {{ project.prerequisites | markdownify | remove: '<p>' | remove: '</p>' }}</p>
+    {% endif %}
     <p>{{ project.overview | markdownify }}</p>
     <div class="publications__item-right column-t-2">
       {% if project.url %}

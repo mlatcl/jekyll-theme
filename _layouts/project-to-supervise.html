@@ -21,6 +21,15 @@ layout: page
       <h2>Overview</h2>
       <span></span>
     </div>
+    {% if page.prerequisites %}
+    <div class="research-overview__prerequisites">
+      <div class="section-heading">
+        <h3>Prerequisite</h3>
+        <span></span>
+      </div>
+      {{ page.prerequisites | markdownify }}
+    </div>
+    {% endif %}
     <div class="research-overview__short">
       {{ page.overview | markdownify }}
     </div>
@@ -31,6 +40,11 @@ layout: page
         <span></span>
       </div>
       <ul>
+        {% if page.prerequisites %}
+        <li>What are the prerequisites?
+          <div>{{ page.prerequisites | markdownify }}</div>
+        </li>
+        {% endif %}
         <li>What will I learn in this Project?
           <div>{{ page.student_learn | markdownify }}</div>
         </li>
