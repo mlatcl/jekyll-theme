@@ -1,0 +1,48 @@
+{% comment %}
+List the latest events tagged with a person or project slug.
+
+Pass one of:
+  person_slug  – match against event.people
+  project_slug – match against event.projects
+
+Optional:
+  limit – maximum items to show (default 3)
+{% endcomment %}
+{% assign events_limit = include.limit | default: 3 %}
+{% assign person_slug = include.person_slug %}
+{% assign project_slug = include.project_slug %}
+{% assign related_events = "" | split: "" %}
+{% for item in site.events %}
+  {% assign keep_item = false %}
+  {% if person_slug and person_slug != "" and item.people and item.people contains person_slug %}
+    {% assign keep_item = true %}
+  {% endif %}
+  {% if project_slug and project_slug != "" and item.projects and item.projects contains project_slug %}
+    {% assign keep_item = true %}
+  {% endif %}
+  {% if keep_item %}
+    {% assign related_events = related_events | push: item %}
+  {% endif %}
+{% endfor %}
+{% if related_events != empty %}
+{% assign related_events = related_events | sort: "event_date" | reverse %}
+{% assign related_events_count = related_events | size %}
+<section class="block block__related-news">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Related Events</h2>
+      <span></span>
+    </div>
+    <div class="related-news__listings">
+      {% for post in related_events limit: events_limit %}
+      {% include events__post.html %}
+      {% endfor %}
+    </div>
+    {% if related_events_count > events_limit %}
+    <p class="related-news__more">
+      <a class="button-simple" href="{{ '/events/' | relative_url }}">View all events</a>
+    </p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

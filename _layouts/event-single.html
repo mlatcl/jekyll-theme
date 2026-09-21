@@ -147,7 +147,7 @@ layout: page
                 </g>
               </g>
             </svg>
-            <p>{{ page.start | date: "%-d %B %Y %H:%M" }}</p>
+            <p>{% if page.event_date %}{{ page.event_date | date: "%-d %B %Y" }}{% elsif page.start %}{{ page.start | date: "%-d %B %Y %H:%M" }}{% endif %}</p>
           </div>
           <span class="hero__post-border"></span>
         </div>
@@ -177,3 +177,5 @@ layout: page
     {{ content }}
   </div>
 </section>
+
+{% include tagged-people-projects.html %}

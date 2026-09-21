@@ -188,31 +188,11 @@ layout: page
 {% endif %}
 {% endif %}
 
-{% if page.publications != nil %}
-{% assign people_size = page.publications | size %}
-{% if publications_size != 0 %}
-<section class="block block__publications">
-  <div class="container">
-    <div class="section-heading">
-      <h2>Related Publications</h2>
-      <span></span>
-    </div>
-    <div class="publications__list">
-      {% for publication_slug in page.publications %}
-      {% for publication in site.publications %}
-      {% include match_publication_claim.html claim=publication_slug publication=publication %}
-      {% if matched_publication %}
-      {% include listpaper.html entry=publication %}
-      {% endif %}
-      {% endfor %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-{% endif %}
-
 {% include related-news-tagged.html project_slug=page.slug %}
+
+{% include related-events-tagged.html project_slug=page.slug %}
+
+{% include recent-publications.html %}
 
 <section class="block block__pagination">
   <div class="container row row--justified">

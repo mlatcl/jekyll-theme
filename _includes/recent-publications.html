@@ -1,0 +1,57 @@
+{% comment %}
+  Publications claimed on the current page.
+
+  Shows at most five, newest first (by the publication's published date).
+  The heading is "Recent Publications" when there are five or more, and
+  "Publications" when there are fewer than five.
+{% endcomment %}
+{% if page.publications != nil %}
+{% assign matched_pubs = "" | split: "" %}
+{% for claim in page.publications %}
+  {% for publication in site.publications %}
+    {% include match_publication_claim.html claim=claim publication=publication %}
+    {% if matched_publication %}
+      {% assign matched_pubs = matched_pubs | push: publication %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+{% assign pub_count = matched_pubs | size %}
+{% if pub_count > 0 %}
+{% if pub_count < 5 %}
+  {% assign pub_heading = "Publications" %}
+{% else %}
+  {% assign pub_heading = "Recent Publications" %}
+{% endif %}
+{% assign stamped_pubs = "" | split: "" %}
+{% for publication in matched_pubs %}
+  {% if publication.published %}
+    {% assign sort_date = publication.published | date: "%Y-%m-%d" %}
+  {% elsif publication.date %}
+    {% assign sort_date = publication.date | date: "%Y-%m-%d" %}
+  {% else %}
+    {% assign sort_date = "0000-00-00" %}
+  {% endif %}
+  {% capture stamped %}{{ sort_date }}|{{ publication.slug }}{% endcapture %}
+  {% assign stamped_pubs = stamped_pubs | push: stamped %}
+{% endfor %}
+{% assign stamped_pubs = stamped_pubs | sort | reverse %}
+<section class="block block__publications">
+  <div class="container">
+    <div class="section-heading">
+      <h2>{{ pub_heading }}</h2>
+      <span></span>
+    </div>
+    <div class="publications__list">
+      {% for stamped in stamped_pubs limit: 5 %}
+        {% assign pub_slug = stamped | split: "|" | last %}
+        {% for publication in matched_pubs %}
+          {% if publication.slug == pub_slug %}
+            {% include listpaper.html entry=publication %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endif %}

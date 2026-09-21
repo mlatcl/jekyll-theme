@@ -97,26 +97,8 @@ layout: page
   </div>
 </section>
 
-{% if page.publications != nil %}
-<section class="block block__publications">
-  <div class="container">
-    <div class="section-heading">
-      <h2>Related Publications</h2>
-      <span></span>
-    </div>
-    <div class="publications__list">
-      {% for item in page.publications %}
-      {% assign project_slug = item %}
-      {% for item in site.publications %}
-      {% include match_publication_claim.html claim=project_slug publication=item %}
-      {% if matched_publication %}
-      {% include listpaper.html entry=item %}
-      {% endif %}
-      {% endfor %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
 {% include related-news-tagged.html person_slug=page.slug %}
+
+{% include related-events-tagged.html person_slug=page.slug %}
+
+{% include recent-publications.html %}
