@@ -212,6 +212,8 @@ layout: page
 {% endif %}
 {% endif %}
 
+{% include related-news-tagged.html project_slug=page.slug %}
+
 <section class="block block__pagination">
   <div class="container row row--justified">
     {% if page.previous.url %}

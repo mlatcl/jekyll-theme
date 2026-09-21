@@ -1,0 +1,48 @@
+{% comment %}
+List the latest news items tagged with a person or project slug.
+
+Pass one of:
+  person_slug  – match against news.people
+  project_slug – match against news.projects
+
+Optional:
+  limit – maximum items to show (default 3)
+{% endcomment %}
+{% assign news_limit = include.limit | default: 3 %}
+{% assign person_slug = include.person_slug %}
+{% assign project_slug = include.project_slug %}
+{% assign related_news = "" | split: "" %}
+{% for item in site.news %}
+  {% assign keep_item = false %}
+  {% if person_slug and person_slug != "" and item.people and item.people contains person_slug %}
+    {% assign keep_item = true %}
+  {% endif %}
+  {% if project_slug and project_slug != "" and item.projects and item.projects contains project_slug %}
+    {% assign keep_item = true %}
+  {% endif %}
+  {% if keep_item %}
+    {% assign related_news = related_news | push: item %}
+  {% endif %}
+{% endfor %}
+{% if related_news != empty %}
+{% assign related_news = related_news | sort: "date" | reverse %}
+{% assign related_news_count = related_news | size %}
+<section class="block block__related-news">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Related News</h2>
+      <span></span>
+    </div>
+    <div class="related-news__listings">
+      {% for item in related_news limit: news_limit %}
+      {% include news-events__post.html %}
+      {% endfor %}
+    </div>
+    {% if related_news_count > news_limit %}
+    <p class="related-news__more">
+      <a class="button-simple" href="{{ '/news/' | relative_url }}">View all news</a>
+    </p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
