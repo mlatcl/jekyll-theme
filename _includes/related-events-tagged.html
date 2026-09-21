@@ -11,7 +11,7 @@ Optional:
 {% assign events_limit = include.limit | default: 3 %}
 {% assign person_slug = include.person_slug %}
 {% assign project_slug = include.project_slug %}
-{% assign related_events = "" | split: "" %}
+{% assign stamped_events = "" | split: "" %}
 {% for item in site.events %}
   {% assign keep_item = false %}
   {% if person_slug and person_slug != "" and item.people and item.people contains person_slug %}
@@ -21,12 +21,20 @@ Optional:
     {% assign keep_item = true %}
   {% endif %}
   {% if keep_item %}
-    {% assign related_events = related_events | push: item %}
+    {% if item.event_date %}
+      {% assign sort_date = item.event_date | date: "%Y-%m-%d" %}
+    {% elsif item.date %}
+      {% assign sort_date = item.date | date: "%Y-%m-%d" %}
+    {% else %}
+      {% assign sort_date = "0000-00-00" %}
+    {% endif %}
+    {% capture stamped %}{{ sort_date }}|{{ item.url }}{% endcapture %}
+    {% assign stamped_events = stamped_events | push: stamped %}
   {% endif %}
 {% endfor %}
-{% if related_events != empty %}
-{% assign related_events = related_events | sort: "event_date" | reverse %}
-{% assign related_events_count = related_events | size %}
+{% if stamped_events != empty %}
+{% assign stamped_events = stamped_events | sort | reverse %}
+{% assign related_events_count = stamped_events | size %}
 <section class="block block__related-news">
   <div class="container">
     <div class="section-heading">
@@ -34,8 +42,13 @@ Optional:
       <span></span>
     </div>
     <div class="related-news__listings">
-      {% for post in related_events limit: events_limit %}
-      {% include events__post.html %}
+      {% for stamped in stamped_events limit: events_limit %}
+        {% assign event_url = stamped | split: "|" | last %}
+        {% for post in site.events %}
+          {% if post.url == event_url %}
+            {% include events__post.html %}
+          {% endif %}
+        {% endfor %}
       {% endfor %}
     </div>
     {% if related_events_count > events_limit %}
