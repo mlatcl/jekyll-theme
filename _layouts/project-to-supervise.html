@@ -21,6 +21,9 @@ layout: page
       <h2>Overview</h2>
       <span></span>
     </div>
+    <div class="research-overview__short">
+      {{ page.overview | markdownify }}
+    </div>
     {% if page.prerequisites %}
     <div class="research-overview__prerequisites">
       <div class="section-heading">
@@ -30,9 +33,6 @@ layout: page
       {{ page.prerequisites | markdownify }}
     </div>
     {% endif %}
-    <div class="research-overview__short">
-      {{ page.overview | markdownify }}
-    </div>
   {% if page.status == 'Available' %}
     <div class="research-overview__long">
       <div class="section-heading">
