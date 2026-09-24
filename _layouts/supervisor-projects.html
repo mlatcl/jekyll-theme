@@ -1,0 +1,47 @@
+---
+layout: page
+---
+
+<section class="block block__hero block__hero--small">
+  <div class="container">
+    {% include top-row-logo-and-menu.html %}
+    <div class="row">
+      <div class="column">
+        <span class="hero__dot hero__dot--bottom-left"></span>
+        <span class="hero__dot hero__dot--bottom-right"></span>
+        {% assign supervisor = site.people | where: "slug", page.person_slug | first %}
+        {% if supervisor %}
+        <div class="hero__item hero__item--top-left">
+          <a href="{{ supervisor.url }}" class="back-to-collection">
+            <p>Back to profile</p>
+          </a>
+        </div>
+        {% endif %}
+        <div class="hero__item hero__item--bottom-left">
+          <h1 class="hero__title">{{ page.title }}</h1>
+        </div>
+      </div>
+      <div class="column">
+        <span class="hero__dot hero__dot--bottom-right"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block block__publications">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Projects to Supervise</h2>
+      <span></span>
+    </div>
+    <div class="publications__list">
+      {% assign projects = site.availableprojects | where_exp: "proj", "proj.supervisors contains page.person_slug" | sort: "title" %}
+      {% for project in projects %}
+      {% include listavailableproject.html %}
+      {% endfor %}
+      {% if projects.size == 0 %}
+      <p>No projects listed yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>

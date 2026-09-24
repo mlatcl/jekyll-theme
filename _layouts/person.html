@@ -92,6 +92,10 @@ layout: page
         {% if page.email != nil %}
         <a href="mailto:{{page.email}}">{{page.email}}</a>
         {% endif %}
+        {% assign supervised_projects = site.availableprojects | where_exp: "proj", "proj.supervisors contains page.slug" %}
+        {% if supervised_projects.size > 0 %}
+        <p><a href="{{ site.baseurl }}/people/{{ page.slug }}/projects.html">Projects to supervise &gt;</a></p>
+        {% endif %}
       </div>
     </div>
   </div>
