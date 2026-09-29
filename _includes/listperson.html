@@ -9,8 +9,8 @@
 {{ person.name }}
 {%-elsif person.consortium-%}
 {{ person.consortium.name }}
-{%-elsif person.given-%}
-{{ person.given }}{%if person.prefix %} {{ person.prefix }}{% endif %} {{ person.family }}{%if person.suffix %} {{ person.suffix }}{% endif %}
+{%-elsif person.given or person.preferred-%}
+{%-include extractname.html entry=person-%}{{ name }}
 {%-endif-%}
 {%-if person.url-%}
 </a>
