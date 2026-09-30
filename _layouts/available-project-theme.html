@@ -62,7 +62,7 @@ layout: page
   </div>
 </section>
 
-{% assign theme_children = site.availableprojects | where: "theme", page.slug | sort: "title" %}
+{% assign theme_children = site.availableprojects | where: "theme", page.slug | sort: "title" | sort: "layout" %}
 {% assign theme_has_children = false %}
 {% for project in theme_children %}
   {% unless project.status == 'Hidden' %}

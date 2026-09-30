@@ -35,7 +35,7 @@ layout: page
       <span></span>
     </div>
     <div class="publications__list">
-      {% assign projects = site.availableprojects | sort: "title" %}
+      {% assign projects = site.availableprojects | sort: "title" | sort: "layout" %}
       {% assign listed_count = 0 %}
       {% for project in projects %}
         {% include availableproject-list-visible.html person_slug=page.person_slug %}
