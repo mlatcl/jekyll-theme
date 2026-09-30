@@ -1,0 +1,36 @@
+{% comment %}
+  Sets list_availableproject to true/false for the current `project`.
+
+  Modes:
+  - Top-level (default): visible only when project.theme is blank.
+  - Person: pass person_slug. Visible when that person supervises the project
+    and does not supervise any ancestor theme (walk project.theme upward).
+
+  Nested themes behave like children in both modes.
+{% endcomment %}
+{% assign list_person_slug = include.person_slug %}
+{% assign list_availableproject = false %}
+{% if list_person_slug and list_person_slug != "" %}
+  {% if project.supervisors contains list_person_slug %}
+    {% assign list_availableproject = true %}
+    {% assign availableproject_ancestor_slug = project.theme %}
+    {% for availableproject_hop in (1..20) %}
+      {% if availableproject_ancestor_slug == nil or availableproject_ancestor_slug == "" %}
+        {% break %}
+      {% endif %}
+      {% assign availableproject_ancestor = site.availableprojects | where: "slug", availableproject_ancestor_slug | first %}
+      {% if availableproject_ancestor == nil %}
+        {% break %}
+      {% endif %}
+      {% if availableproject_ancestor.supervisors contains list_person_slug %}
+        {% assign list_availableproject = false %}
+        {% break %}
+      {% endif %}
+      {% assign availableproject_ancestor_slug = availableproject_ancestor.theme %}
+    {% endfor %}
+  {% endif %}
+{% else %}
+  {% if project.theme == nil or project.theme == "" %}
+    {% assign list_availableproject = true %}
+  {% endif %}
+{% endif %}

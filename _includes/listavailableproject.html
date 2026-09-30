@@ -1,6 +1,6 @@
 <div class="publications__item">
   <div class="publications__item-left column-t-9">
-    <h2 class="publications__item-title">{{ project.title }}</h2>
+    <h2 class="publications__item-title">{{ project.title }}{% if project.layout == 'available-project-theme' %} <span class="publications__item-kind">(theme)</span>{% endif %}</h2>
     {% if project.supervisors %}
     <p><strong>Supervisor{% if project.supervisors.size > 1 %}s{% endif %}:</strong>
       {% for person_slug in project.supervisors %}

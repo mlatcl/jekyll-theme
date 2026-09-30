@@ -3,7 +3,9 @@ layout: page
 ---
 <section class="block block__hero block__hero--standard">
   <div class="hero__bg">
+    {% if page.featured_image %}
     <img src="{{site.data.images.directory | relative_url }}/{{ page.featured_image }}">
+    {% endif %}
   </div>
   <div class="container">
     {% include top-row-logo-and-menu.html %}
@@ -27,7 +29,7 @@ layout: page
     {% if page.theme %}
       {% assign parent_theme = site.availableprojects | where: "slug", page.theme | first %}
       {% if parent_theme %}
-      <p><strong>Theme:</strong> <a href="{{ parent_theme.url }}">{{ parent_theme.title }}</a></p>
+      <p><strong>Part of theme:</strong> <a href="{{ parent_theme.url }}">{{ parent_theme.title }}</a></p>
       {% endif %}
     {% endif %}
     {% if page.prerequisites %}
@@ -39,44 +41,38 @@ layout: page
       {{ page.prerequisites | markdownify }}
     </div>
     {% endif %}
-  {% if page.status == 'Available' %}
+    {% if page.content != blank %}
     <div class="research-overview__long">
-      <div class="section-heading">
-        <h3>FAQs</h3>
-        <span></span>
-      </div>
-      <ul>
-        {% if page.prerequisites %}
-        <li>What are the prerequisites?
-          <div>{{ page.prerequisites | markdownify }}</div>
-        </li>
-        {% endif %}
-        <li>What will I learn in this Project?
-          <div>{{ page.student_learn | markdownify }}</div>
-        </li>
-        <li> What is the objective of the project?
-          <div>{{ page.project_objective | markdownify }}</div>
-        </li>
-        <li>How does this fit into the bigger picture?
-          <div>{{ page.project_bigger_picture | markdownify }}</div>
-        </li>
-      </ul>
       {{ page.content | markdownify }}
     </div>
-    <div class="research-overview__short-expand">
-      <!-- SVGS into buttons -->
-      <button class="expand-summary">Expand Summary</button>
-      <button class="minimise-summary">Minimise Summary</button>
-    </div>
-  {% endif %}
+    {% endif %}
   </div>
-  {% if page.file-link %}
-    <div>
-      <a href="{{ page.file-link }}">Download project thesis</a>
-    </div>
-  {% endif %}
 </section>
 
+{% assign theme_children = site.availableprojects | where: "theme", page.slug | sort: "title" %}
+{% assign theme_has_children = false %}
+{% for project in theme_children %}
+  {% unless project.status == 'Hidden' %}
+    {% assign theme_has_children = true %}
+  {% endunless %}
+{% endfor %}
+{% if theme_has_children %}
+<section class="block block__publications">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Projects in this theme</h2>
+      <span></span>
+    </div>
+    <div class="publications__list">
+      {% for project in theme_children %}
+        {% unless project.status == 'Hidden' %}
+          {% include listavailableproject.html %}
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 {% if page.supervisors != nil %}
 <section class="block block__team">

@@ -35,11 +35,16 @@ layout: page
       <span></span>
     </div>
     <div class="publications__list">
-      {% assign projects = site.availableprojects | where_exp: "proj", "proj.supervisors contains page.person_slug" | sort: "title" %}
+      {% assign projects = site.availableprojects | sort: "title" %}
+      {% assign listed_count = 0 %}
       {% for project in projects %}
-      {% include listavailableproject.html %}
+        {% include availableproject-list-visible.html person_slug=page.person_slug %}
+        {% if list_availableproject %}
+          {% include listavailableproject.html %}
+          {% assign listed_count = listed_count | plus: 1 %}
+        {% endif %}
       {% endfor %}
-      {% if projects.size == 0 %}
+      {% if listed_count == 0 %}
       <p>No projects listed yet.</p>
       {% endif %}
     </div>
