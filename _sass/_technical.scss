@@ -4,6 +4,42 @@
 .editsection-bracket{
 }
 
+/* Subtle GitHub edit affordance (person socials, overview aside, news/events) */
+.edit-link {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    opacity: 0.35;
+    transition: opacity 200ms ease;
+
+    &:hover,
+    &:focus {
+        opacity: 0.85;
+    }
+
+    &__icon {
+        width: 18px;
+        height: 18px;
+        display: block;
+    }
+
+    &__label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+}
+
+.hero__post-socials .edit-link {
+    color: #000000;
+}
+
 /* For the code boxes.*/
 .codebox {
     /* Below are styles for the codebox (not the code itself) */

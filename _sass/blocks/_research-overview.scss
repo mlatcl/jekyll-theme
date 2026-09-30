@@ -24,7 +24,48 @@
     }
 
     .container {
-        max-width: 930px;
+        max-width: 1120px;
+    }
+
+    .research-overview__aside {
+        padding: 2rem 0 0 0;
+
+        @include bp(tablet) {
+            padding: 0;
+        }
+
+        .section-heading {
+            margin-bottom: 2rem;
+        }
+    }
+
+    .research-overview__aside-links {
+        display: flex;
+        flex-wrap: wrap;
+
+        a {
+            margin-right: 2rem;
+            display: block;
+            color: $primary-blue;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            svg {
+                width: auto;
+                height: 20px;
+                display: block;
+
+                @include bp(tablet) {
+                    height: 29px;
+                }
+            }
+        }
+    }
+
+    .research-overview__long--visible {
+        display: block;
     }
 
     .section-heading {
